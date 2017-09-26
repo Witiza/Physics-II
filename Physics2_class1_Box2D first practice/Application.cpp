@@ -1,5 +1,13 @@
 #include "Application.h"
 
+#include "Box2D/Box2D/Box2D.h"
+
+#if _DEBUG
+#pragma comment( lib, "Box2D/libx86/Debug/Box2D.lib" )
+#else
+#pragma comment( lib, "Box2D/libx86/Release/Box2D.lib" )
+#endif
+
 Application::Application()
 {
 	renderer = new ModuleRender(this);
