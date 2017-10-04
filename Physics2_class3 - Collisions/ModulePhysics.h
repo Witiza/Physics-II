@@ -33,7 +33,7 @@ public:
 // Module --------------------------------------
 // TODO 3: Make module physics inherit from b2ContactListener
 // then override void BeginContact(b2Contact* contact)
-class ModulePhysics : public Module
+class ModulePhysics : public Module 
 {
 public:
 	ModulePhysics(Application* app, bool start_enabled = true);
