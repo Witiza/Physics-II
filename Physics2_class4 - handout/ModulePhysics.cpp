@@ -3,6 +3,7 @@
 #include "ModuleInput.h"
 #include "ModuleRender.h"
 #include "ModulePhysics.h"
+#include "ModuleRender.h"
 #include "p2Point.h"
 #include "math.h"
 
@@ -196,6 +197,10 @@ update_status ModulePhysics::PostUpdate()
 
 	// Bonus code: this will iterate all objects in the world and draw the circles
 	// You need to provide your own macro to translate meters to pixels
+	b2Vec2 mouse_position;
+	mouse_position.x = PIXEL_TO_METERS(App->input->GetMouseX());
+	mouse_position.y = PIXEL_TO_METERS(App->input->GetMouseY());
+
 	for(b2Body* b = world->GetBodyList(); b; b = b->GetNext())
 	{
 		for(b2Fixture* f = b->GetFixtureList(); f; f = f->GetNext())
@@ -265,15 +270,55 @@ update_status ModulePhysics::PostUpdate()
 			}
 
 			// TODO 1: If mouse button 1 is pressed ...
-			// App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN
+			if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN)
+			{
+		
+			
+				if (f->TestPoint(mouse_position) && body_found == nullptr)
+				{
+					LOG("asdjklasdasdf")
+						body_found = b;
+		
+				
+					
+				}
+					
+			}
+			
+		
 			// test if the current body contains mouse position
 		}
 	}
 
+if (body_found != nullptr && mouse_joint == nullptr)
+{
+	b2MouseJointDef def;
+	def.bodyA = ground;
+	def.bodyB = body_found;
+	def.target = mouse_position;
+	def.dampingRatio = 0.5f;
+	def.frequencyHz = 2.0f;
+	def.maxForce = 100.0f * body_found->GetMass();
+	mouse_joint = (b2MouseJoint*)world->CreateJoint(&def);
+}
+	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT && mouse_joint != nullptr)
+	{
+		mouse_joint->SetTarget(mouse_position);		
+		//App->render->DrawLine();
+
+	}
 	// If a body was selected we will attach a mouse joint to it
 	// so we can pull it around
 	// TODO 2: If a body was selected, create a mouse joint
 	// using mouse_joint class property
+	if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_UP && mouse_joint != nullptr)
+	{
+
+		//App->render->DrawLine();
+		world->DestroyJoint(mouse_joint);
+		mouse_joint = nullptr;
+		body_found = nullptr;
+	}
 
 
 	// TODO 3: If the player keeps pressing the mouse button, update
