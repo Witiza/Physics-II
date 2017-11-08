@@ -3,7 +3,7 @@
 #include "Globals.h"
 #include "p2List.h"
 #include "Primitive.h"
-
+#include "Bullet\include\btBulletDynamicsCommon.h"
 // TODO 1: Add Bullet common include btBulletDynamicsCommon.h
 
 class DebugDrawer;
@@ -25,9 +25,14 @@ private:
 	bool debug;
 
 	DebugDrawer* debug_draw;
+	btDefaultCollisionConfiguration* col_configuration;
+	btCollisionDispatcher* dispatcher;
+	btDbvtBroadphase* pairCache;
+	btSequentialImpulseConstraintSolver* constraintSolver;
+	btDiscreteDynamicsWorld* world;
 };
 
-/*
+
 // Uncomment the debug Drawer once you finish TODO 4
 class DebugDrawer : public btIDebugDraw
 {
@@ -46,4 +51,3 @@ public:
 	Line line;
 	Primitive point;
 };
-*/
