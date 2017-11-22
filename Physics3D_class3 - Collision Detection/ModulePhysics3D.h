@@ -37,7 +37,8 @@ private:
 	btSequentialImpulseConstraintSolver* solver;
 	btDiscreteDynamicsWorld*			world;
 	DebugDrawer*						debug_draw;
-
+	p2List<btCollisionShape*> shapes;
+	p2List<PhysBody3D*> bodies;
 	// TODO 1
 };
 
@@ -57,4 +58,5 @@ public:
 	DebugDrawModes mode;
 	Line line;
 	Primitive point;
+
 };

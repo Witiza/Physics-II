@@ -20,8 +20,12 @@ bool ModuleSceneIntro::Start()
 	App->camera->Move(vec3(1.0f, 1.0f, 0.0f));
 	App->camera->LookAt(vec3(0, 0, 0));
 
+	Sphere sphere;
+	sphere.radius = 3;
+	PhysBody3D* body = App->physics->AddBody(sphere);
 	// TODO 3: create a sphere in the world with a primitive
 	// and create a physics body for it. Remember to render it in Update()
+	
 
 	// TODO 5: Add this module to the list of collision listeners
 
