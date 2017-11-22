@@ -21,6 +21,22 @@ bool ModuleSceneIntro::Start()
 	App->camera->LookAt(vec3(0, 0, 0));
 
 	// TODO 2: Chain few N spheres together to form a snake
+	p2List<PhysBody3D*> snek;
+	for (int i = 1; i < 10; i++)
+	{
+		Sphere s(1);
+		s.SetPos(i,0, i);
+		snek.add(App->physics->AddBody(s));
+	}
+	p2List_item<PhysBody3D*>* item = snek.getFirst();
+	
+	float i = 1;
+	while (item->next->next != nullptr)
+	{
+		App->physics->AddJoint(*item->data, *item->next->data, { i,0,i }, { i,0,i });
+		item = item->next;
+		i++;
+	}
 
 	// TODO 4: Chain few N spheres together to form a a bike's sphere
 	// Be sure to put the right axis

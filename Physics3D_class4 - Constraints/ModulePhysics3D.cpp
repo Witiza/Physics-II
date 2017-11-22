@@ -171,6 +171,13 @@ bool ModulePhysics3D::CleanUp()
 	}
 	bodies.clear();
 
+	p2List_item<btTypedConstraint*>* c_item = constraints.getFirst();
+	while (c_item)
+	{
+		delete c_item->data;
+		c_item = c_item->next;
+	}
+	constraints.clear();
 	// TODO: Remember to clean free all memeory from constraints
 
 	delete world;
@@ -196,6 +203,7 @@ PhysBody3D* ModulePhysics3D::AddBody(const Sphere& sphere, float mass)
 	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, myMotionState, colShape, localInertia);
 
 	btRigidBody* body = new btRigidBody(rbInfo);
+	
 	PhysBody3D* pbody = new PhysBody3D(body);
 
 	body->setUserPointer(pbody);
@@ -203,6 +211,19 @@ PhysBody3D* ModulePhysics3D::AddBody(const Sphere& sphere, float mass)
 	bodies.add(pbody);
 
 	return pbody;
+}
+
+void ModulePhysics3D::AddJoint(PhysBody3D &bA, PhysBody3D &bB, const vec3 & anchorA, const vec3 & anchorB)
+{
+	btVector3 anchA(anchorA.x,anchorA.y,anchorA.z);
+
+	btVector3 anchB(anchorB.x,anchorB.y,anchorB.z);
+
+	btTypedConstraint* constraint = new btPoint2PointConstraint(*bA.body, *bB.body, anchA, anchB);
+
+	world->addConstraint(constraint);
+
+	constraints.add(constraint);
 }
 
 // ---------------------------------------------------------
