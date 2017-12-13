@@ -2,6 +2,9 @@
 #include "Application.h"
 #include "PhysBody3D.h"
 #include "ModuleCamera3D.h"
+#include "ModulePhysics3D.h"
+#include "PhysVehicle3D.h"
+
 
 ModuleCamera3D::ModuleCamera3D(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -60,7 +63,7 @@ update_status ModuleCamera3D::Update(float dt)
 	/*Position += Camera_view.translation();*/
 	
 
-	Look(Last_position, Camera_view.translation(),true);
+
 	
 	//Reference += newPos;
 	
@@ -102,8 +105,11 @@ update_status ModuleCamera3D::Update(float dt)
 	}*/
 
 	// Recalculate matrix -------------
-	CalculateViewMatrix();
-	App->camera->Last_position = Camera_view.translation();
+	//Last_position.y += 3;
+	//Look(Last_position, Camera_view.translation(), true);
+	//CalculateViewMatrix();
+	//App->camera->Last_position = Camera_view.translation();
+	FollowCar();
 	return UPDATE_CONTINUE;
 }
 
@@ -152,6 +158,34 @@ void ModuleCamera3D::Move(const vec3 &Movement)
 float* ModuleCamera3D::GetViewMatrix()
 {
 	return &ViewMatrix;
+}
+
+void ModuleCamera3D::FollowCar()
+{
+	btTransform transform = App->player->vehicle->vehicle->getChassisWorldTransform();
+	btVector3 position = transform.getOrigin();
+	btVector3 direction = transform.getBasis().getColumn(2);
+	vec3 vec3position = GetVec3From_btVec3(position);
+	vec3 vec3direction = GetVec3From_btVec3(direction);
+
+	vec3 CameraPosition = ( vec3direction) - vec3position;
+
+	 CameraPosition.y += 4;
+
+	vec3 CameraDirection =  vec3direction + vec3position;
+	
+	Look(CameraPosition, CameraDirection,true);
+}
+
+vec3 ModuleCamera3D::GetVec3From_btVec3(btVector3 vector)
+{
+	vec3 ret;
+
+	ret.x = vector.x();
+	ret.y = vector.y();
+	ret.z = vector.z();
+
+	return ret;
 }
 
 // -----------------------------------------------------------------

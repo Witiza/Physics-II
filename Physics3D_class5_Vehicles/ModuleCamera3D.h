@@ -2,7 +2,7 @@
 #include "Module.h"
 #include "Globals.h"
 #include "glmath.h"
-
+class btVector3;
 class ModuleCamera3D : public Module
 {
 public:
@@ -17,6 +17,8 @@ public:
 	void LookAt(const vec3 &Spot);
 	void Move(const vec3 &Movement);
 	float* GetViewMatrix();
+	void FollowCar();
+	vec3 GetVec3From_btVec3(btVector3 vector);
 
 private:
 
